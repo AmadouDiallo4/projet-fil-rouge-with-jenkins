@@ -1,4 +1,4 @@
-/* groovylint-disable CompileStatic, NglParseError */
+/* groovylint-disable CompileStatic, NglParseError, UnnecessaryObjectReferences */
 /* groovylint-disable DuplicateListLiteral, DuplicateStringLiteral, GStringExpressionWithinString, LineLength, NestedBlockDepth, NglParseError */
 /* groovylint-disable-next-line CompileStatic */
 /* groovylint-disable-next-line CompileStatic, NglParseError */
@@ -107,35 +107,17 @@ pipeline {
                 }
             }
         }
-        stage('Staging ec2') {
+        stage('Create staging ec2') {
             environment {
                 ENV_NAME = 'staging'
-                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-                AWS_PRIVATE_KEY = credentials('AWS_SSH_KEY')
-                AWS_KEY_NAME = 'devops-gbane'
-                AWS_PROFILE = 'default'
             }
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
-                    sh '''
-                        echo "Generating aws credentials"
-                        rm -rf devops-gbane.pem ~/.aws
-                        mkdir -p ~/.aws
-                        echo "[default]" > ~/.aws/credentials
-                        echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
-                        echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
-                        echo "aws_profile=$AWS_PROFILE" >> ~/.aws/credentials
-                        rm -rf $TF_DIR/staging/files/$AWS_KEY_NAME.pem
-                        cat "$AWS_PRIVATE_KEY" > $TF_DIR/staging/files/$AWS_KEY_NAME.pem
-                        chmod 400 $TF_DIR/staging/files/$AWS_KEY_NAME.pem
-                        chmod 400 ~/.aws/credentials
-                        cd src/terraform/$ENV_NAME
-                        terraform init -input=false
-                        terraform plan -out $ENV_NAME.plan
-                        terraform apply $ENV_NAME.plan
-                    '''
+                    aws($ENV_NAME)
+                    terraform.init($ENV_NAME)
+                    terraform.plan($ENV_NAME)
+                    terraform.apply($ENV_NAME)
                 }
             }
         }
@@ -146,24 +128,40 @@ pipeline {
             steps {
                 script {
                     //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
-                    sh '''
-                        #!/bin/bash
-                        INFILE=$PWD/list.txt
-                        # Read the input file line by line
-                        mkdir -p app-dir
-                        export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt)
-                        for LINE in $(cat "$INFILE")
-                        do
-                            cp -r src/"$LINE" app-dir/
-                        done
-                        cp src/scripts/deploy-apps.sh app-dir/ && cp src/terraform/staging/files/infos_ec2.txt app-dir/
-                        zip -r app-dir.zip app-dir/
-                        scp -i $TF_DIR/$ENV_NAME/files/$AWS_KEY_NAME.pem -o StrictHostKeyChecking=no -r app-dir.zip ubuntu@$instance_ip:~/
-                        ssh -i $TF_DIR/$ENV_NAME/files/$AWS_KEY_NAME.pem -o StrictHostKeyChecking=no  ubuntu@$instance_ip "unzip ~/app-dir.zip"
-                        ssh -i $TF_DIR/$ENV_NAME/files/$AWS_KEY_NAME.pem -o StrictHostKeyChecking=no  ubuntu@$instance_ip "chmod +x ~/app-dir/deploy-apps.sh"
-                        ssh -i $TF_DIR/$ENV_NAME/files/$AWS_KEY_NAME.pem -o StrictHostKeyChecking=no  ubuntu@$instance_ip "cd ~/app-dir && sh deploy-apps.sh"
-                        rm -rf app-dir app-dir.zip
-                    '''
+                    deploy.exportIp($ENV_NAME)
+                    deploy.createDir($ENV_NAM)
+                    deploy.copyFile($ENV_NAME)
+                    deploy.unzipDir($ENV_NAME)
+                    deploy.apps($ENV_NAME)
+                    deploy.deleteDirs($ENV_NAME)
+                }
+            }
+        }
+        stage('Create prod ec2') {
+            environment {
+                ENV_NAME = 'prod'
+            }
+            steps {
+                script {
+                    aws($ENV_NAME)
+                    terraform.init($ENV_NAME)
+                    terraform.plan($ENV_NAME)
+                    terraform.apply($ENV_NAME)
+                }
+            }
+        }
+        stage('Deploy apps to prod') {
+            environment {
+                ENV_NAME = 'prod'
+            }
+            steps {
+                script {
+                    deploy.exportIp($ENV_NAME)
+                    deploy.createDir($ENV_NAM)
+                    deploy.copyFile($ENV_NAME)
+                    deploy.unzipDir($ENV_NAME)
+                    deploy.apps($ENV_NAME)
+                    deploy.deleteDirs($ENV_NAME)
                 }
             }
         }
