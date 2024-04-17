@@ -51,7 +51,6 @@ follow.txt
 installation.txt
 Jenkinsfile_old
 !/jobs
-!/.gitignore
 !/*.xml
 # Ignore all files in jobs subdirectories except for folders.
 # Note: git doesn't track folders, only file content.
