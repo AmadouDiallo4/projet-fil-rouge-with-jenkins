@@ -18,7 +18,7 @@ variable "aws_staging_common_tag" {
   type        = map(any)
   description = "definir le tag de l'image"
   default = {
-    Name = "jenkins-test"
+    Name = "test-jenkins-test"
   }
 }
 
@@ -36,7 +36,7 @@ variable "aws_key_name" {
 variable "aws_staging_sg_name" {
   type        = string
   description = "set sg name"
-  default     = "jenkins-sg"
+  default     = "test-jenkins-sg"
 
 }
 
@@ -44,7 +44,7 @@ variable "aws_staging_eip_tag" {
   type = map(any)
   description = "EIP tag"
   default = {
-    Name  = "jenkins-eip"
+    Name  = "test-jenkins-eip"
   }
 }
 
@@ -52,7 +52,7 @@ variable "ebs_common_tag" {
   type        = map(any)
   description = "definir le tag de l'ebs"
   default = {
-    Name = "jenkins-ebs"
+    Name = "test-jenkins-ebs"
   }
 }
 
@@ -60,7 +60,7 @@ variable "aws_staging_sg_tag" {
   type        = map
   description = "set security group tag"
   default = {
-    Name = "jenkins-sg-tag"
+    Name = "test-jenkins-sg-tag"
   }
 }
 variable "aws_public_ip" {
