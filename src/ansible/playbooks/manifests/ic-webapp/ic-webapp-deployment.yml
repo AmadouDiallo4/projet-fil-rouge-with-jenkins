@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-webapp
+  namespace: icgroup
+  labels:
+    app: ic-webapp
+    env: prod
+spec:
+  selector:
+    matchLabels:
+      app: ic-webapp
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ic-webapp 
+    spec:
+      containers:
+      - name: ic-webapp
+        image: openlab89/ic-webapp:1.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: ODOO_URL
+          value: "http://$INSTANCE:30069"
+        - name: PGADMIN_URL
+          value: "http://$INSTANCE:30200"
+        ports:
+        - containerPort: 8080
+        
+      
+            
+        

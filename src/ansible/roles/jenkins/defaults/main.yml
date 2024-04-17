@@ -1,0 +1,6 @@
+# ---
+# # defaults file for roles/jenkins
+# sub_domain:
+# - jenkins
+# domain_name:
+# - read-me.site

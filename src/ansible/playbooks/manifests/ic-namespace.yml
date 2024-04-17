@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: icgroup
+  labels:
+    env: prod
+status:
+  phase: Active
+

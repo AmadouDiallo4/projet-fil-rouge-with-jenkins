@@ -1,0 +1,16 @@
+<VirtualHost *:{{ listen_port }}>
+    ServerName {{ sub_domain }}.{{ domain_name }}
+    ServerAdmin webmaster@localhost
+    ProxyPass         /  http://{{ ip_address }}:{{ proxy_port }}/ nocanon
+    ProxyPassReverse  /  http://{{ ip_address }}:{{ proxy_port }}/
+    ProxyRequests     Off
+    AllowEncodedSlashes NoDecode
+    RequestHeader set X-Forwarded-Proto "{{ protocol }}"
+    RequestHeader set X-Forwarded-Port "{{ protocol_port }}"
+    <Proxy http://127.0.0.1:{{ proxy_port }}/*>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+    ErrorLog ${APACHE_LOG_DIR}/{{ sub_domain }}.error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ sub_domain }}.access.log combined
+</VirtualHost>

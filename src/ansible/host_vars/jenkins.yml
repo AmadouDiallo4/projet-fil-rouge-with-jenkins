@@ -1,0 +1,4 @@
+---
+# ansible_host: 3.93.224.34
+# ansible_user: ubuntu
+# ansible_ssh_private_key_file: ~/Bureau/Mini-Projets/projet-fil-rouge-with-jenkins/src/terraform/files/devops-gbane.pem

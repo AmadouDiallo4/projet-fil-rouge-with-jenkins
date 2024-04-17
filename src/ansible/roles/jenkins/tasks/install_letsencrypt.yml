@@ -1,0 +1,13 @@
+---
+- name: install certbot
+  become: true
+  apt: 
+    name: "{{ item }}"
+    state: present 
+  with_items:
+    - certbot 
+    - python3-certbot-apache
+
+- name: run certbot
+  become: true
+  command: certbot --apache -n -d {{ domain_name }} -m {{ acme_email }} --agree-tos 

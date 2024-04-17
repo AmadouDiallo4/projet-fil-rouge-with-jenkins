@@ -1,0 +1,6 @@
+# ---
+# # handlers file for roles/jenkins
+
+# - handlers:
+#   - name: restart apache2
+#     service: name=apache2 state=restarted

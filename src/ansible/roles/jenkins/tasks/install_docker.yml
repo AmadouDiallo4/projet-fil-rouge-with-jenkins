@@ -1,0 +1,37 @@
+- name: get docker installation script 
+  ansible.builtin.get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+
+- name: make file executable
+  ansible.builtin.shell:
+    cmd: sudo chmod +x /tmp/get-docker.sh
+
+- name: install docker
+  ansible.builtin.shell:
+    cmd: sudo sh /tmp/get-docker.sh
+
+- name: add user to docker group
+  user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes
+
+- name: start and enable docker
+  service:
+    enabled: true
+    name: docker 
+    state: started
+  
+- name: download docker-compose
+  ansible.builtin.get_url:
+    url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-{{ arch }}
+    dest: /usr/bin/docker-compose
+
+- name: make docker-compose executable
+  ansible.builtin.shell:
+    cmd: sudo chmod +x /usr/bin/docker-compose
+
+- name: check docker docker-compose
+  ansible.builtin.shell:
+    cmd: sudo docker version && sudo docker-compose version

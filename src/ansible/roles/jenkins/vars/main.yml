@@ -1,0 +1,11 @@
+---
+# vars file for roles/jenkins
+sub_domain: jenkins
+domain_name: read-me.site
+listen_port: 80
+proxy_port: 8080
+ip_address: 127.0.0.1
+protocol: https 
+protocol_port: 443
+user: ubuntu
+arch: linux-x86_64

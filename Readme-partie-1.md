@@ -76,17 +76,17 @@ Pour cela il faut suivre ces étapes: **repositories** -> **New** -> **Repositor
 ---
 - clonage du projet en local
 ```
-git clone https://github.com/gbaneassouman/projet-fil-rouge-with-jenkins.git
+$ git clone https://github.com/gbaneassouman/projet-fil-rouge-with-jenkins.git
 ```
 ```
-cd projet-fil-rouge-with-jenkins && mkdir -p src
+$ cd projet-fil-rouge-with-jenkins && mkdir -p src
 ```
 Le dossier `src` est le dossier qui va contenir l'ensemble des codes
 
 ### b. Écriture du Dockerfile 
 - Création du Dockerfile
 ```
-projet-fil-rouge$ touch src/Dockerfile 
+projet-fil-rouge-with-jenkins$ touch src/Dockerfile 
 ```
 
 ```
@@ -106,15 +106,15 @@ ENTRYPOINT ["python","app.py"]
 
 - Build
 ```
-docker build -t ic-webapp:1.0 .
+$ docker build -t ic-webapp:1.0 .
 
 ```
 ```
-docker run --name test-ic-webapp -d -p 4444:8080 ic-webapp:1.0 
+$ docker run --name test-ic-webapp -d -p 4444:8080 ic-webapp:1.0 
 2033634663fe21cfa71557b2b16a2dd5efc8828e5cbe1adfede40cc78fd9927c
 ```
 ```
-docker ps -a|grep -i "test-ic-webapp"
+$ docker ps -a|grep -i "test-ic-webapp"
 2033634663fe   ic-webapp:1.0                       "python app.py"          12 seconds ago      Up 11 seconds                   0.0.0.0:4444->8080/tcp, :::4444->8080/tcp              test-ic-webapp
 ```
 - Test 
@@ -125,18 +125,18 @@ docker ps -a|grep -i "test-ic-webapp"
 ### d. Push vers Dockerhub
 - Procédons d'abord à l'arrêt puis à la supression du conteneur
 ```
-docker stop test-ic-webapp 
+$ docker stop test-ic-webapp 
 test-ic-webap
 ```
 ```
-docker rm test-ic-webapp 
+$ docker rm test-ic-webapp 
 test-ic-webapp
 ```
 ```
-docker tag ic-webapp:1.0 openlab89/ic-webapp:1.0
+$ docker tag ic-webapp:1.0 openlab89/ic-webapp:1.0
 ```
 ```
-docker push openlab89/ic-webapp:1.0 
+$ docker push openlab89/ic-webapp:1.0 
 The push refers to repository [docker.io/openlab89/ic-webapp]
 cb85cd2e3be1: Pushed 
 81c97900e352: Pushed 
@@ -165,7 +165,7 @@ Pour cette partie, on aura besoin de 3 serveurs hébergés dans le cloud de `AWS
   3) **Serveur 3**, ``(AWS, t2.micro)`` : Serveur de PROD 
 
 Le choix du cloud provider importe peu (AWS, AZURE ou autres ...)
-> :warning: Le serveur 1 (**Jenkins**) sera créé manuellement par vos soins pour les besoins de CI. Il devra être rataché à votre compte Github pour pour que votre pipeline se lance automatiquement . Quant aux deux autres, il seront créé automatiquement par le pipeline, via l'outil `terraform`.
+> :warning: Le serveur 1 (**Jenkins**) sera créé par vos soins pour les besoins de CI. Il devra être rattaché à votre compte `Github` pour pour que votre pipeline se lance automatiquement . Quant aux deux autres, il seront créé automatiquement par le pipeline, via l'outil `terraform`.
 
 >NB: Pour des raisons de performances constatées lors des déploiements nous  n'utilseront que des instances `t2.medium`
 
@@ -188,13 +188,13 @@ Nous allons aussi créer 03 dossiers qui vont utiliser le module pour déployer 
 
 Procédons à la création du module ec2module.
 ```
-mkdir -p terraform/{files,modules,staging,prod,jenkins}
-mkdir -p terraform/modules/ec2module
-touch main.tf outputs.tf variables.tf backend.tf
-cp main.tf outputs.tf variables.tf modules/ec2module/
-cp main.tf variables.tf backend.tf staging/
-cp main.tf variables.tf backend.tf prod/
-mv variables.tf main.tf outputs.tf jenkins/
+$ mkdir -p terraform/{files,modules,staging,prod,jenkins}
+$ mkdir -p terraform/modules/ec2module
+$ touch main.tf outputs.tf variables.tf backend.tf
+$ cp main.tf outputs.tf variables.tf modules/ec2module/
+$ cp main.tf variables.tf backend.tf staging/
+$ cp main.tf variables.tf backend.tf prod/
+$ mv variables.tf main.tf outputs.tf jenkins/
 ```
 
 ### Structure des modules
@@ -262,7 +262,7 @@ Dans ce fichier nous avons déclaré une **data source** `data` et 03 `resources
 
 >NB: On aurait pu créer un module pour chaque resources (`ec2`, `eip` et `sg`) et les appeler comme le module `ec2module`
 
-- **contenu du script modules/ec2module/main.tf pour la prod et le staging**
+- **1.a.1 contenu du script modules/ec2module/main.tf pour la prod et le staging**
 ```
 data "aws_ami" "app_ami" {
   most_recent = true
@@ -350,7 +350,7 @@ resource "aws_security_group" "allow_http_https_ssh" {
   tags = var.aws_sg_tag
 }
 ```
->NB: Dans la resource `eip` on va exécuter un `local_exec` `provisioner` pour récuperer l'adresse ip publique dans le fichier `infos_ec2.txt`. Ce fichier sera utilisé par le `pipeline` pour déployer les applications.
+>NB: Dans la resource `eip` on va exécuter un `local_exec` `provisioner` pour récuperer l'adresse ip publique dans le fichier `infos_ec2.txt`. Ce fichier sera utilisé utérieurement par le `pipeline` pour déployer les applications.
 
 **Description**
 
@@ -363,12 +363,12 @@ resource "aws_security_group" "allow_http_https_ssh" {
   - `instance_type` : le type d'instance fournit par - `variables.tf`
   - `key_name` : le nom de la clé ssh 
   - `security_groups` : associe l'instance au groupe de securité  `aws_security_group` 
-  - `provisioner` : permet de recupérer l'adresse ip publique de l'instance dans le fichier files/infos_ec2.txt. cette action est exécutée sur la machine exécutant terraform ce fichier sera utilisé par le `pipeline` pour déployer les applications.
+  - `provisioner` : permet de recupérer l'adresse ip publique de l'instance dans le fichier files/infos_ec2.txt. cette action est exécutée sur la machine exécutant terraform
    - `root_block_device`:  permet de détruire le volume associé automatiquement à la destruction de l'instance.
-- `aws_eip` : associe une adresse ip publique à l'instance ,cette ip sera dédiée à l'instance
+- `aws_eip` : associe une adresse ip publique à l'instance qui lui sera dédiée
 - `aws_security_group` : permet d'ouvrir les ports `8080` ,`8081`,`8069` et `22` et d'autoriser le trafic sortant sur l'instance.
 
-- **contenu du modules/ec2module/main.tf modifié pour jenkins**
+- **1.a.2 contenu du modules/ec2module/main.tf modifié pour jenkins**
 
 ```
 data "aws_ami" "app_ami" {
@@ -484,7 +484,7 @@ resource "aws_security_group" "allow_http_https_ssh" {
   tags = var.aws_sg_tag
 }
 ```
-- `provisioner` : **permet de copier et d'exécuter le script install.sh sur la machine distante**
+- `provisioner` : permet de copier et d'exécuter le script install.sh sur la machine distante
 
 >NB: Le module modifié pour jenkins copie le script `install.sh` et l'exécute sur le serveur jenkins, il ouvre aussi les ports `80`,`443`,`22` et `8080` et d'autoriser le traffic sortant
 
@@ -966,7 +966,7 @@ EOF
 ```
 **Description**
 
-- `local_file`: Etant donné que l'adresse ip et l'utilisateur  ne seront connues qu'après  l'installation des instances, cette ressource permettra de générer le fichier `host_vars/jenkins.yml` avec les valeurs des arguments `ansible_host` et `ansible_user`.
+- `local_file`: Etant donné que l'adresse ip et l'utilisateur  ne seront connues qu'après  l'installation des instances, cette ressource permettra de générer le fichier `host_vars/jenkins.yml` avec les variables spécifiques à l'hôte `jenkins`. Ces variables sont`ansible_host` et `ansible_user`.
 
 Le fichier généré sera utilisé pour cibler l'instance de `jenkins` pour installer l'application `jenkins` et de ces prérequis.
 
@@ -1072,12 +1072,12 @@ La mise en place de notre serveur se fera à l'aide d'un rôle `ansible`.
 ### c.1.1 - Création des répertoires et fichiers
 Procédons à l'organisation et à la création des différents répertoires et fichiers necéssaires à `ansible`
 ```
-mkdir -p src/ansible 
-mkdir -p src/ansible/{group_vars,host_vars,playbooks,roles}
-touch src/ansible/{hosts.yml,ansible.cfg}
-touch src/ansible/group_vars/{all.yml,jenkins_group.yml}
-touch src/ansible/host_vars/jenkins.yml
-touch src/playbooks/deploy-jenkins.yml
+$ mkdir -p src/ansible 
+$ mkdir -p src/ansible/{group_vars,host_vars,playbooks,roles}
+$ touch src/ansible/{hosts.yml,ansible.cfg}
+$ touch src/ansible/group_vars/{all.yml,jenkins_group.yml}
+$ touch src/ansible/host_vars/jenkins.yml
+$ touch src/playbooks/deploy-jenkins.yml
 ```
 ### c.1.2 - Rôles des répertoires et fichiers
 - `ansible` est notre répertoire de base qui va contenir nos différents fichiers
@@ -1211,7 +1211,7 @@ jenkins/
 ```
 Un rôle Ansible suit une structure de répertoires définie, un rôle est nommé par le répertoire de niveau supérieur. Les sous-répertoires contiennent des fichiers YAML, nommés `main.yml` à l'exception de `files` et `templates`.
 
-### c.2.4 - Rôle des répertoires**
+### c.2.4 - Rôle des répertoires
 
 - `defaults`: contient les variables par défaut pour le rôle.
 - `tasks`: contient les tâches à appliquer.
@@ -1250,15 +1250,15 @@ arch: linux-x86_64
 
 >Dans l'objectif d’accéder facilement à l'application jenkins nous allons installer `Apache2`, configurer un `reverse proxy` sur `127.0.0.1:8080` ,rédiriger un `sous-domaine` sur le serveur.
 Cette tâche se fera avec `ansible` à la suite on va configuerer `letsencrypt` pour générer un certificat `TLS`
-les variables ci-dessus seront necéssaires à cette configuration .
+les valeurs définies dans le vars/main.yml seront necéssaires à cette configuration .
 
-**c.3.1.2 - le fichier `templates/jenkins.conf.j2`**
+**c.3.1.2 - le fichier templates/jenkins.conf.j2**
 
 - **Configuration du serveur virtuel apache2**
 
 Configurons un `serveur virtuel par nom`, cette configuration se fera dans le fichier `jenkins.conf.j2` qui se trouve dans le dossier `templates`.
 
-Dans ce fichier seront passées les variables du fichier `vars/main.yml`
+Dans ce fichier seront passées les variables dont les valeurs sont définies dans le fichier `vars/main.yml`
 
 ```
 <VirtualHost *:{{ listen_port }}>
@@ -1414,7 +1414,7 @@ Ajout du dépot de java et installation de java
 
 - Mise à jour des paquets, installation , démarrage et activation au démarrage d'apache
 - Activation des modules pour la mise en place du `proxy`
-- Copie sur le serveur du `template jinja2` `jenkins.conf.j2` en remplacement du serveur virtuel par défaut `000-default.conf` 
+- Copie du fichier `templates/jenkins.conf.j2` sur le serveur  en remplacement du serveur virtuel par défaut `000-default.conf` 
 
 4 - `tasks/install_docker.yml`
 
@@ -1464,8 +1464,8 @@ Ajout du dépot de java et installation de java
 - Démarrage et activation au démarrage de `docker`
 - Téléchargement et installation de `docker-compose`
 
->**REMARQUES :** 
-**Après le provisionning du serveur et l'installation des différentes applications, nous allons procéder à la rédirection du sous-domaine `jenkins.read-me.site` vers le serveur `jenkins`, installer letsencrypt et générer un certificat**
+>**REMARQUES** :
+Après le provisionning du serveur et l'installation des différentes applications, nous allons procéder à la rédirection du sous-domaine `jenkins.read-me.site` vers le serveur `jenkins`, installer letsencrypt et générer un certificat
 
 ### c.2.5 - Provisionning du serveur jenkins
 
@@ -1744,7 +1744,8 @@ Pour la mise en place du pipeline il faut:
 - créer des credentials
 - créer un nouveau item de type pipeline
   
-<strong>1 - Installation des plugins </strong><br/>
+#### 1 - Installation des plugins
+
 Pour l'installation des puglins necéssaires au pipeline on va dans 
 
 **Tableau de bord -> Administrer jenkins -> Plugins -> Available plugins** puis chercher et installer les plugins suivants:
@@ -1757,8 +1758,8 @@ Pour l'installation des puglins necéssaires au pipeline on va dans
 
 Une fois ces plugins installés nous passerons à la création des crédentials
 
-<strong>2 - Création des crédentials</strong><br/>
-Nous allons créer les crédentials ci-dessous pour éviter de coder en dur et d'exposer des informations sensibles, pour cela  il faut aller dans **Tableau de bord -> Administrer jenkins -> credentials**.
+#### 2 - Création des crédentials
+Nous allons créer les crédentials ci-dessous pour éviter de coder en dur et d'exposer des informations sensibles, pour cela il faut aller dans **Tableau de bord -> Administrer jenkins -> credentials**.
 
 
 | **IDENTIFIANT**              |   **Type**                         | **Description**                                 |
@@ -1790,7 +1791,8 @@ Pour créer un nouveau pipeline il faut cliquer sur `Nouveau item` à gauche dan
 
 ![](images/jenkins/pipeline.png)
 
-### Intégration de github à jenkins
+## Intégration de github à jenkins
+![](https://www.vectorlogo.zone/logos/github/github-icon.svg)
 
 Dans le but de déclencher automatiquement le lancement notre pipeline à chaque `commit` sur `Github`, nous allons intégrer `Github` à `jenkins` à travers un `webhook`. Cette intégration se fera en 03 étapes:
 - 1 - Renseigner l'url du dépôt dans le pipeline 
@@ -1833,25 +1835,24 @@ sur `Github` cliquer sur **Settings** -> **webhook** et renseigner les informati
 # 
 Nous allons intégrer slack à notre environnement jenkins pour recevoir directement des notifications après l'execution de notre pipeline.
 
-<strong>Installation du plugin slack-notification</strong><br/>
+#### Installation du plugin slack-notification
 
-Voici les étapes à suivre pour ajouter l’intégration Jenkins CI.
+Voici les étapes à suivre pour ajouter l’intégration slack.
 
 #### Étape 1
 Dans le tableau de bord Jenkins, cliquer sur `Administrer Jenkins` dans la barre de navigation à gauche.
 
 #### Étape 2
-Cliquer sur `Plugins` puis `Available plugins` et rechercher `Slack Notification` dans l’onglet search available plugins. Cochez la case et installer le plugin.
+Cliquer sur `Plugins` puis `Available plugins` et rechercher `Slack Notification` dans l’onglet search `available plugins`. Cochez la case et installer le plugin.
 
 ![](images/slack/slack.png)
 
 ### Étape 3 
 Une fois l’installation effectuée, cliquer de nouveau sur Administrer Jenkins dans le volet de navigation gauche, puis accéder à `Configure System` (Configurer le système).
 
-Rechercher la section **Global Slack Notifier Settings** (Paramètres de notification Slack globaux) et ajouter les valeurs suivantes :
+Rechercher la section **Global Slack Notifier Settings** (Paramètres de notification Slack globaux) et renseigner les informations suivantes :
 
-Sous-domaine de l’équipe : **workspace**
-Identifiant d’authentification où jeton d’intégration : 
+Sous-domaine de l’équipe : **workspace** et Identifiant d’authentification où jeton d’intégration : 
 
 Créez un identifiant de type secret texte ayant pour valeur **Token**
 
@@ -1866,13 +1867,13 @@ Pour obtenir le **workspace** et **Token** il faut au préalable:
 
 ![](images/slack/test2-slack.png)
 
-à partir de cet instant on peux ajouter les notifications slack dans le **Jenkinsfile**
+à partir de cet instant on peux ajouter les notifications slack dans le `Jenkinsfile`
 
-à fin de rendre disponible la notification slack à tous les projets, je l'ai transformé en **Shared Library** qui va permettre de faire un simple appel dans les **Jenkinsfiles**.
+à fin de rendre disponible la notification slack à tous les projets, nous allons créer une `Shared Library` qui va permettre de faire un simple appel dans les `Jenkinsfiles`.
 
-Pour ce faire j'ai :
+Pour ce faire il faut :
 
-- crée un depôt **Github** [voir ici](https://github.com/gbaneassouman/shared-library/blob/main/vars/slackNotifier.groovy) et ajouté un fichier de type groovy appelé *slackNotifier.groovy* ensuite definir la fonction de notification ci-dessous
+- crée un depôt `Github` [voir ici](https://github.com/gbaneassouman/shared-library/blob/main/vars/slackNotifier.groovy) et ajouté un fichier de type groovy appelé *`slackNotifier.groovy`* ensuite definir la fonction de notification ci-dessous
 
 ```
 #!/usr/bin/env groovy
@@ -1893,11 +1894,11 @@ def call(String buildResult) {
 }
 ```
 
-- configurer la Shared Library à partir de ***Administrer jenkins -> System -> Global Pipeline Libraries***
+- configurer la `Shared Library` à partir de ***Administrer jenkins -> System -> Global Pipeline Libraries***
 
 ![](images/slack//shared-library.png)
 
-- importer la Shared library précédemment configurée dans le Jenkinsfile 
+- importer la `Shared library` précédemment configurée dans le `Jenkinsfile` 
 
 ```
 @Library('slack-shared-library') _

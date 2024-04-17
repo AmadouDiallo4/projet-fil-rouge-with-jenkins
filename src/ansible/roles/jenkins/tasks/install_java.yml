@@ -1,0 +1,15 @@
+---
+- name: add java 17 repo 
+  become: true 
+  ansible.builtin.apt_repository:
+    repo: ppa:linuxuprising/java
+    
+- name: Install java
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - fontconfig
+    - openjdk-17-jre
+  

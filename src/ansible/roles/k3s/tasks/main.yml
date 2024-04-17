@@ -1,0 +1,49 @@
+---
+# tasks file for roles/k3s
+- name: Update system packages
+  become: true
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: true
+    force_apt_get: yes
+    
+- name: Upgrade system packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: dist 
+    force_apt_get: yes
+
+- name: Create kube config Directory
+  become: true
+  ansible.builtin.file:
+    path: /home/{{ system_user }}/.kube
+    owner: "{{ system_user}}"
+    group: "{{ system_user}}"
+    mode: 'u=rwx,g=rwx,o=rx'
+    dest: /home/{{ system_user }}/.kube
+    state: directory 
+
+- name: Download K3s
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: /tmp/k3s-installer.sh
+
+- name: Run K3s
+  shell:
+    cmd: cat /tmp/k3s-installer.sh | sh -s -- --write-kubeconfig-mode 644
+
+- name: Copy config file
+  ansible.builtin.copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /home/{{ system_user }}/.kube
+    remote_src: true
+
+- name: Export KUBECONFIG
+  shell:
+    cmd: export KUBECONFIG=/home/{{ system_user }}/.kube
+
+- name: "Test kubernetes"
+  command: kubectl get nodes
+
+

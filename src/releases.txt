@@ -1,0 +1,3 @@
+ODOO_URL=http://${instance_ip}:8069
+PGADMIN_URL=http://${instance_ip}:8081
+version: 1.0

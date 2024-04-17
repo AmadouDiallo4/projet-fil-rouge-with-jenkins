@@ -1,0 +1,14 @@
+---
+# tasks file for roles/apps
+- name: Copy kubernetes manfest to remote host
+  become: true
+  ansible.builtin.copy:
+    src: manifests/
+    dest: /home/{{ system_user }}/manifests/
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    directory_mode: true
+    mode: 'u=rwx,go=rwx'
+
+- name: Déploiment des applications
+  command: kubectl apply -k /home/{{ system_user }}/manifests/

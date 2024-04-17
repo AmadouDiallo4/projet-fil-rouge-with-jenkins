@@ -1,0 +1,8 @@
+---
+- name: Deploying Kubernetes on staging srv
+  hosts: staging
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - roles/k3s

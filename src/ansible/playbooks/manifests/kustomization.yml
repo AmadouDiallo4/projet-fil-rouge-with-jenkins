@@ -1,0 +1,26 @@
+resources:
+  # Namespace
+  - ic-namespace.yml
+  # postgres
+  - postgres/postgres-pv.yml
+  - postgres/postgres-pvc.yml
+  - postgres/postgres-secret.yml
+  - postgres/postgres-sts.yml
+  - postgres/postgres-svc.yml
+  # pgadmin
+  - pgadmin/pgadmin-config.yml
+  - pgadmin/pgadmin-pv.yml
+  - pgadmin/pgadmin-pvc.yml
+  - pgadmin/pgadmin-secret.yml
+  - pgadmin/pgadmin-deploy.yml
+  - pgadmin/pgadmin-svc.yml
+  # odoo
+  #- odoo/odoo-pv.yml
+  - odoo/odoo-pvc.yml
+  - odoo/odoo-secret.yml
+  - odoo/odoo-svc.yml
+  - odoo/odoo-deployment.yml
+  # ic-webapp
+  - ic-webapp/ic-webapp-deployment.yml
+  - ic-webapp/ic-webapp-svc.yml
+  

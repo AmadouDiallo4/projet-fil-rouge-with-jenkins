@@ -50,7 +50,6 @@ terraform.rc
 follow.txt
 installation.txt
 Jenkinsfile_old
-/*
 !/jobs
 !/.gitignore
 !/*.xml
@@ -68,8 +67,8 @@ jobs/**
 # performance when running even basic commands like 'git status'.
 builds
 indexing
-devops-gbane.pem
-devops-gbane-0.pem
+files/devops-gbane.pem
+files/devops-gbane-0.pem
 *.pem
 # Exclude only config.xml files in repository subdirectories.
 !config.xml

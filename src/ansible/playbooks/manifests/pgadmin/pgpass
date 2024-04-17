@@ -1,0 +1,1 @@
+postgres-svc:5432:postgres:postgres:password

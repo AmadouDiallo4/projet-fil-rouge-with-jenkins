@@ -1,0 +1,40 @@
+---
+  - name: Add Jenkins apt repository
+    become: true
+    apt_key:
+      url: https://pkg.jenkins.io/debian/jenkins.io-2023.key
+      state: present
+    
+  - name: Configure Jenkins repository
+    become: true
+    apt_repository:
+      repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+      state: present
+    
+  - name: Update cache
+    become: true
+    apt: 
+      update_cache: yes
+
+  - name: Install Jenkins
+    become: true
+    apt:
+      name: jenkins
+      state: present
+    
+  - name: Start Jenkins 
+    service:
+      enabled: true
+      name: jenkins 
+      state: started
+  
+  - name: Get jenkins pass
+    become: true
+    ansible.builtin.slurp:
+      src: /var/lib/jenkins/secrets/initialAdminPassword
+    register: password
+  
+
+  - name: Print jenkins pass
+    ansible.builtin.debug:
+      msg: "{{ password['content'] | b64decode }}"

@@ -1,0 +1,5 @@
+docker-compose.yml
+releases.txt
+.env
+Dockerfile
+app/

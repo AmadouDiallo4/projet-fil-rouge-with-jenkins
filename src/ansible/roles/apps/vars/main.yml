@@ -1,0 +1,3 @@
+---
+# vars file for roles/apps
+system_user: ubuntu

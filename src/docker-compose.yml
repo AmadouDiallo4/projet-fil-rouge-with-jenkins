@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  web_app:
+    container_name: ic-webapp
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ODOO_URL=http://${instance_ip}:8069
+      - PGADMIN_URL=http://${instance_ip}:8081
+      - version=${version}
+    image: ic-webapp:${version}
+    networks:
+      - ic-network
+    ports:
+      - 8080:8080
+    volumes:
+      - webapp-data:/opt
+  
+  odoo:
+    image: odoo:13.0
+    container_name: odoo
+    restart: unless-stopped
+    user: root
+    depends_on:
+      - postgresdb
+    env_file:
+      - .env
+    networks:
+      - ic-network
+    command: odoo
+      --without-demo
+      --dev=all
+      --database DB
+
+    ports:
+      - 8069:8069
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+    
+
+  postgresdb:
+    image: postgres:12
+    container_name: db
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - ic-network
+    ports:
+      - 5432:5432
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+
+  pg_admin:
+    image: elestio/pgadmin
+    container_name: pgadmin
+    restart: unless-stopped
+    depends_on:
+      - postgresdb
+    env_file:
+      - .env
+    networks:
+      - ic-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - 8200:8080
+networks:
+  ic-network:
+    driver: bridge
+
+volumes:
+  pgadmin-data:
+  webapp-data:
+  odoo-db-data:
+  odoo-web-data:
