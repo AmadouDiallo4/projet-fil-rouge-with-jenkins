@@ -1,25 +1,28 @@
 #!/usr/bin/env groovy
 /* groovylint-disable MethodParameterTypeRequired, MethodReturnTypeRequired, NoDef, UnusedMethodParameter */
 
-def init(dirname) {
+def init(name) {
+    /* groovylint-disable-next-line GStringExpressionWithinString */
     sh '''
-        cd src/terraform/dirname
+        cd src/terraform/${name}
         terraform init -input=false
     '''
 }
 
-def plan(dirname) {
+def plan(name) {
+    /* groovylint-disable-next-line GStringExpressionWithinString */
     sh '''
-        cd src/terraform/dirname
-        terraform plan - out dirname.plan
+        cd src/terraform/${name}
+        terraform plan - out ${name}.plan
     '''
 }
 
-/* groovylint-disable-next-line MethodParameterTypeRequired */
-def apply(dirname) {
+/* groovylint-disable-next-line GStringExpressionWithinString, MethodParameterTypeRequired */
+def apply(name) {
+    /* groovylint-disable-next-line GStringExpressionWithinString */
     sh '''
-        cd src/terraform/dirname
-        terraform apply dirname.plan
+        cd src/terraform/${name}
+        terraform apply ${name}.plan
     '''
 }
 
