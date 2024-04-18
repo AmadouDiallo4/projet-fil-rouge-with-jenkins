@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
-/* groovylint-disable MethodParameterTypeRequired, MethodReturnTypeRequired, NoDef, UnusedMethodParameter */
+//
+/* groovylint-disable MethodParameterTypeRequired, MethodReturnTypeRequired, NoDef, UnusedMethodParameter */ 
 
 def init(name) {
     /* groovylint-disable-next-line GStringExpressionWithinString */
