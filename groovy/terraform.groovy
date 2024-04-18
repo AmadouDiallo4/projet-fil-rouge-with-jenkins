@@ -3,10 +3,9 @@
 
 def init(name) {
     /* groovylint-disable-next-line GStringExpressionWithinString */
-    sh '''
-        cd src/terraform/${name}
-        terraform init -input=false
-    '''
+    sh "cd src/terraform/${name}"
+    sh "terraform init -input=false"
+    
 }
 
 def plan(name) {
