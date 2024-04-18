@@ -4,27 +4,18 @@
 
 def init(name) {
     /* groovylint-disable-next-line GStringExpressionWithinString */
-    sh """
-        cd src/terraform/${name}
-        terraform init -input=false
-    """
+    sh "terraform -chdir=src/terraform/${name} init -input=false"
     
 }
 
 def plan(name) {
     /* groovylint-disable-next-line GStringExpressionWithinString */
-    sh """
-        cd src/terraform/${name}
-        terraform plan - out ${name}.plan
-    """
+    sh "terraform -chdir=src/terraform/${name} plan -out ${name}.plan"
 }
 
 /* groovylint-disable-next-line GStringExpressionWithinString, MethodParameterTypeRequired */
 def apply(name) {
     /* groovylint-disable-next-line GStringExpressionWithinString */
-    sh """
-        cd src/terraform/${name}
-        terraform apply ${name}.plan
-    """
+    sh "terraform -chdir=src/terraform/${name} apply ${name}.plan"
 }
 
