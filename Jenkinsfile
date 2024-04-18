@@ -114,10 +114,10 @@ pipeline {
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('$ENV_NAME')
-                    terraform.init('$ENV_NAME')
-                    terraform.plan('$ENV_NAME')
-                    terraform.apply('$ENV_NAME')
+                    aws('staging')
+                    terraform.init('staging')
+                    terraform.plan('staging')
+                    terraform.apply('staging')
                 }
             }
         }
@@ -128,12 +128,12 @@ pipeline {
             steps {
                 script {
                     //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
-                    deploy.exportIp('$ENV_NAME')
-                    deploy.createDir('$ENV_NAME')
-                    deploy.copyFile('$ENV_NAME')
-                    deploy.unzipDir('$ENV_NAME')
-                    deploy.apps('$ENV_NAME')
-                    deploy.deleteDirs('$ENV_NAME')
+                    deploy.exportIp('staging')
+                    deploy.createDir('staging')
+                    deploy.copyFile('staging')
+                    deploy.unzipDir('staging')
+                    deploy.apps('staging')
+                    deploy.deleteDirs('staging')
                 }
             }
         }
