@@ -130,12 +130,12 @@ pipeline {
                 script {
                     //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
                     //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
-                    deploy.exportIp('staging')
-                    deploy.appDirname('staging')
-                    deploy.copyFile('staging')
-                    deploy.unzipDir('staging')
-                    deploy.apps('staging')
-                    deploy.deleteDirs('staging')
+                    deploy('staging')
+                    //deploy.appDirname('staging')
+                    //deploy.copyFile('staging')
+                    //deploy.unzipDir('staging')
+                    //deploy.apps('staging')
+                    //deploy.deleteDirs('staging')
                 }
             }
         }
