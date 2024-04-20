@@ -125,7 +125,7 @@ pipeline {
             environment {
                 ENV_NAME = 'staging'
                 username = 'ubuntu'
-                instance_ip = '1.1.1.1'
+                //instance_ip = '1.1.1.1'
             }
             steps {
                 script {
