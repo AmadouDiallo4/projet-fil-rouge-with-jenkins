@@ -132,7 +132,7 @@ pipeline {
                     sh '''
                         #!/bin/bash
                         echo 4.4.4.4 > src/terraform/staging/files/infos_ec2.txt
-                        export INSTANCE=\$(cat src/terraform/${dirname}/files/infos_ec2.txt)
+                        export INSTANCE=$(cat src/terraform/${dirname}/files/infos_ec2.txt)
                         printenv
                     '''
                 //deploy('staging')
