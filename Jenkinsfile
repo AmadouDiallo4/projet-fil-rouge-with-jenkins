@@ -107,30 +107,30 @@ pipeline {
                 }
             }
         }
-        stage('Create staging ec2') {
-            environment {
-                ENV_NAME = 'staging'
-            }
-            steps {
-                script {
-                    /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('staging')
-                    terraform.init('staging')
-                    terraform.plan('staging')
-                    terraform.apply('staging')
-                }
-            }
-        }
+        // stage('Create staging ec2') {
+        //     environment {
+        //         ENV_NAME = 'staging'
+        //     }
+        //     steps {
+        //         script {
+        //             /* groovylint-disable-next-line GStringExpressionWithinString */
+        //             aws('staging')
+        //             terraform.init('staging')
+        //             terraform.plan('staging')
+        //             terraform.apply('staging')
+        //         }
+        //     }
+        // }
         stage('Deploy apps to staging') {
             environment {
                 ENV_NAME = 'staging'
                 username = 'ubuntu'
+                instance_ip = '1.1.1.1'
             }
             steps {
                 script {
-                    test.execute('export instance_ip=$(cat src/terraform/staging/files/infos_ec2.txt)')
-                //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
-                //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
+                    sh " export instance_ip=\$(awk '{print \$1}' src/terraform/staging/files/infos_ec2.txt) "
+                    sh "echo ${instance_ip}"
                 //deploy('staging')
                 //deploy.appDirname('staging')
                 //deploy.copyFile('staging')
