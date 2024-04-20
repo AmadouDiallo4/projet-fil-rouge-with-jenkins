@@ -125,17 +125,14 @@ pipeline {
             environment {
                 ENV_NAME = 'staging'
                 username = 'ubuntu'
-                //instance_ip = '1.1.1.1'
             }
             steps {
                 script {
-                    sh '''
-                        #!/bin/bash
-                        echo 4.4.4.4 > src/terraform/staging/files/infos_ec2.txt
-                        export INSTANCE=$(cat src/terraform/${ENV_NAME}/files/infos_ec2.txt)
-                        printenv
-                    '''
-                //deploy('staging')
+                    //sh '''
+                    //    #!/bin/bash
+                    //    export INSTANCE=$(cat src/terraform/${ENV_NAME}/files/infos_ec2.txt)
+                    //'''
+                    deploy('${ENV_NAME}')
                 //deploy.appDirname('staging')
                 //deploy.copyFile('staging')
                 //deploy.unzipDir('staging')
