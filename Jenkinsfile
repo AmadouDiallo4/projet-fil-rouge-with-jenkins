@@ -107,20 +107,20 @@ pipeline {
                 }
             }
         }
-        stage('Create staging ec2') {
-            environment {
-                ENV_NAME = 'staging'
-            }
-            steps {
-                script {
-                    /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('${ENV_NAME}')
-                    terraform.init('${ENV_NAME}')
-                    terraform.plan('${ENV_NAME}')
-                    terraform.apply('${ENV_NAME}')
-                }
-            }
-        }
+        // stage('Create staging ec2') {
+        //     environment {
+        //         ENV_NAME = 'staging'
+        //     }
+        //     steps {
+        //         script {
+        //             /* groovylint-disable-next-line GStringExpressionWithinString */
+        //             aws('${ENV_NAME}')
+        //             terraform.init('${ENV_NAME}')
+        //             terraform.plan('${ENV_NAME}')
+        //             terraform.apply('${ENV_NAME}')
+        //         }
+        //     }
+        // }
         stage('Deploy apps to staging') {
             environment {
                 ENV_NAME = 'staging'
