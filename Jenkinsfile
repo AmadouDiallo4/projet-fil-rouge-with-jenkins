@@ -128,7 +128,7 @@ pipeline {
             }
             steps {
                 script {
-                    deploy('${ENV_NAME}')
+                    deploy('staging')
                 }
             }
         }
