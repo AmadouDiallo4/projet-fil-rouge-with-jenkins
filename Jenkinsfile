@@ -128,16 +128,7 @@ pipeline {
             }
             steps {
                 script {
-                    //sh '''
-                    //    #!/bin/bash
-                    //    export INSTANCE=$(cat src/terraform/${ENV_NAME}/files/infos_ec2.txt)
-                    //'''
                     deploy('${ENV_NAME}')
-                //deploy.appDirname('staging')
-                //deploy.copyFile('staging')
-                //deploy.unzipDir('staging')
-                //deploy.apps('staging')
-                //deploy.deleteDirs('staging')
                 }
             }
         }
