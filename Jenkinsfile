@@ -130,7 +130,7 @@ pipeline {
             steps {
                 script {
                     sh 'echo 4.4.4.4 > src/terraform/staging/files/infos_ec2.txt'
-                    sh "export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt)"
+                    sh "export instance_ip=\$(cat src/terraform/staging/files/infos_ec2.txt)"
                     sh 'printenv'
                 //deploy('staging')
                 //deploy.appDirname('staging')
