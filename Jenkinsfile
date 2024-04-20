@@ -128,54 +128,54 @@ pipeline {
             }
             steps {
                 script {
-                    test.execute('ls -l')
-                    //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
-                    //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
-                    //deploy('staging')
-                    //deploy.appDirname('staging')
-                    //deploy.copyFile('staging')
-                    //deploy.unzipDir('staging')
-                    //deploy.apps('staging')
-                    //deploy.deleteDirs('staging')
+                    test.execute('export instance_ip=$(awk '{ print $1 }' src/terraform/staging/files/infos_ec2.txt)')
+                //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
+                //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
+                //deploy('staging')
+                //deploy.appDirname('staging')
+                //deploy.copyFile('staging')
+                //deploy.unzipDir('staging')
+                //deploy.apps('staging')
+                //deploy.deleteDirs('staging')
                 }
             }
         }
-        //stage('Create prod ec2') {
-        //    environment {
-        //        ENV_NAME = 'prod'
-        //    }
-        //    steps {
-        //        script {
-        //            aws('$ENV_NAME')
-        //            terraform.init('$ENV_NAME')
-        //            terraform.plan('$ENV_NAME')
-        //            terraform.apply('$ENV_NAME')
-        //        }
-        //    }
-        //}
-        //
-        //stage('Deploy apps to prod') {
-        //    environment {
-        //        ENV_NAME = 'prod'
-        //    }
-        //    steps {
-        //        script {
-        //            deploy.exportIp('$ENV_NAME')
-        //            deploy.createDir('$ENV_NAME')
-        //            deploy.copyFile('$ENV_NAME')
-        //            deploy.unzipDir('$ENV_NAME')
-        //            deploy.apps('$ENV_NAME')
-        //            deploy.deleteDirs('$ENV_NAME')
-        //        }
-        //    }
-        //}
+    //stage('Create prod ec2') {
+    //    environment {
+    //        ENV_NAME = 'prod'
+    //    }
+    //    steps {
+    //        script {
+    //            aws('$ENV_NAME')
+    //            terraform.init('$ENV_NAME')
+    //            terraform.plan('$ENV_NAME')
+    //            terraform.apply('$ENV_NAME')
+    //        }
+    //    }
+    //}
+    //
+    //stage('Deploy apps to prod') {
+    //    environment {
+    //        ENV_NAME = 'prod'
+    //    }
+    //    steps {
+    //        script {
+    //            deploy.exportIp('$ENV_NAME')
+    //            deploy.createDir('$ENV_NAME')
+    //            deploy.copyFile('$ENV_NAME')
+    //            deploy.unzipDir('$ENV_NAME')
+    //            deploy.apps('$ENV_NAME')
+    //            deploy.deleteDirs('$ENV_NAME')
+    //        }
+    //    }
+    //}
     }
-    // post {
-    //     always {
-    //         script {
-    //             /* Use Slack-notification.groovy from shared library */
-    //             slackNotifier currentBuild.result
-    //         }
-    //     }
-    // }
+// post {
+//     always {
+//         script {
+//             /* Use Slack-notification.groovy from shared library */
+//             slackNotifier currentBuild.result
+//         }
+//     }
+// }
 }
