@@ -87,7 +87,7 @@ pipeline {
                 PGADMIN_DEFAULT_PASSWORD = credentials('PGADMIN_DEFAULT_PASSWORD')
                 PGADMIN_LISTEN_PORT = credentials('PGADMIN_LISTEN_PORT')
             }
-            steps{
+            steps {
                 script {
                     sh '''
                         echo "Generating env-file"
@@ -151,12 +151,7 @@ pipeline {
             }
             steps {
                 script {
-                    deploy.exportIp('$ENV_NAME')
-                    deploy.createDir('$ENV_NAME')
-                    deploy.copyFile('$ENV_NAME')
-                    deploy.unzipDir('$ENV_NAME')
-                    deploy.apps('$ENV_NAME')
-                    deploy.deleteDirs('$ENV_NAME')
+                    deploy('$ENV_NAME')
                 }
             }
         }
@@ -167,6 +162,6 @@ pipeline {
                     slackNotifier currentBuild.result
                 }
             }
-        }    
+        }
     }
 }
