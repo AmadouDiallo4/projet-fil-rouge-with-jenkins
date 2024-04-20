@@ -128,7 +128,7 @@ pipeline {
             }
             steps {
                 script {
-                    test.execute('export instance_ip=$(awk '{ print $1 }' src/terraform/staging/files/infos_ec2.txt)')
+                    test.execute('export instance_ip=$(cat src/terraform/staging/files/infos_ec2.txt)')
                 //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
                 //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
                 //deploy('staging')
