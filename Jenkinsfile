@@ -27,52 +27,52 @@ pipeline {
     }
     agent any //declaration globale de l'agent
     stages {
-        // stage('Cloning code') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //                  rm -rf projet-fil-rouge-with-jenkins || echo "Directory doesn't exists "
-        //                  sleep 2
-        //                  git clone https://github.com/gbaneassouman/projet-fil-rouge-with-jenkins.git
-        //              '''
-        //         }
-        //     }
-        // }
-        // stage('Build image') {
-        //     steps {
-        //         script {
-        //              /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             sh '''
-        //                docker build --no-cache -f ./src/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ./src/
-        //             '''
-        //         }
-        //     }
-        // }
-        // stage('Test image') {
-        //     steps {
-        //         script {
-        //             /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             sh 'docker stop ${TEST_CONTAINER} || true && docker rm ${TEST_CONTAINER} || true'
-        //             sh 'docker run --name ${TEST_CONTAINER} -d -p ${HOST_PORT}:${CONTAINER_PORT} -e PORT=${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}'
-        //             sh 'sleep 10'
-        //             sh 'curl -k http://172.17.0.1:${HOST_PORT}| grep -i "Odoo"'
-        //         }
-        //     }
-        // }
-        // stage('Release image') {
-        //     steps {
-        //         script {
-        //             /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             sh '''
-        //                 docker stop ${TEST_CONTAINER} || true && docker rm ${TEST_CONTAINER} || true
-        //                 docker save ${IMAGE_NAME}:${IMAGE_TAG} > /tmp/${IMAGE_NAME}:${IMAGE_TAG}.tar
-        //                 docker image tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB}/${IMAGE_NAME}:${IMAGE_TAG}
-        //                 echo $DOCKERHUB_PASSWORD_PSW | docker login -u ${DOCKER_HUB} --password-stdin
-        //                 docker push ${DOCKER_HUB}/${IMAGE_NAME}:${IMAGE_TAG}
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Cloning code') {
+            steps {
+                script {
+                    sh '''
+                         rm -rf projet-fil-rouge-with-jenkins || echo "Directory doesn't exists "
+                         sleep 2
+                         git clone https://github.com/gbaneassouman/projet-fil-rouge-with-jenkins.git
+                     '''
+                }
+            }
+        }
+        stage('Build image') {
+            steps {
+                script {
+                     /* groovylint-disable-next-line GStringExpressionWithinString */
+                    sh '''
+                       docker build --no-cache -f ./src/Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ./src/
+                    '''
+                }
+            }
+        }
+        stage('Test image') {
+            steps {
+                script {
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    sh 'docker stop ${TEST_CONTAINER} || true && docker rm ${TEST_CONTAINER} || true'
+                    sh 'docker run --name ${TEST_CONTAINER} -d -p ${HOST_PORT}:${CONTAINER_PORT} -e PORT=${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}'
+                    sh 'sleep 10'
+                    sh 'curl -k http://172.17.0.1:${HOST_PORT}| grep -i "Odoo"'
+                }
+            }
+        }
+        stage('Release image') {
+            steps {
+                script {
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    sh '''
+                        docker stop ${TEST_CONTAINER} || true && docker rm ${TEST_CONTAINER} || true
+                        docker save ${IMAGE_NAME}:${IMAGE_TAG} > /tmp/${IMAGE_NAME}:${IMAGE_TAG}.tar
+                        docker image tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB}/${IMAGE_NAME}:${IMAGE_TAG}
+                        echo $DOCKERHUB_PASSWORD_PSW | docker login -u ${DOCKER_HUB} --password-stdin
+                        docker push ${DOCKER_HUB}/${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
+                }
+            }
+        }
         // Ce stage permet de generer le fichier .env necéssaire à docker-compose.yml
         stage('Generate env-file') {
             environment {
@@ -107,20 +107,20 @@ pipeline {
                 }
             }
         }
-        // stage('Create staging ec2') {
-        //     environment {
-        //         ENV_NAME = 'staging'
-        //     }
-        //     steps {
-        //         script {
-        //             /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             aws('${ENV_NAME}')
-        //             terraform.init('${ENV_NAME}')
-        //             terraform.plan('${ENV_NAME}')
-        //             terraform.apply('${ENV_NAME}')
-        //         }
-        //     }
-        // }
+        stage('Create staging ec2') {
+            environment {
+                ENV_NAME = 'staging'
+            }
+            steps {
+                script {
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    aws('${ENV_NAME}')
+                    terraform.init('${ENV_NAME}')
+                    terraform.plan('${ENV_NAME}')
+                    terraform.apply('${ENV_NAME}')
+                }
+            }
+        }
         stage('Deploy apps to staging') {
             environment {
                 ENV_NAME = 'staging'
