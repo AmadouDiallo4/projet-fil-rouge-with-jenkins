@@ -128,9 +128,10 @@ pipeline {
             }
             steps {
                 script {
+                    test.execute('ls -l')
                     //si on l'execute dans un script le stage n'echoura jamais si le deploy echoue
                     //sh ''' export instance_ip=$(awk '{print $1}' src/terraform/staging/files/infos_ec2.txt) '''
-                    deploy('staging')
+                    //deploy('staging')
                     //deploy.appDirname('staging')
                     //deploy.copyFile('staging')
                     //deploy.unzipDir('staging')
