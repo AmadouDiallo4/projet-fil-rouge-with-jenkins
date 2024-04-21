@@ -108,23 +108,19 @@ pipeline {
             }
         }
         stage('Create staging ec2') {
-            environment {
-                ENV_NAME = 'staging'
-            }
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('${ENV_NAME}')
-                    terraform.init('${ENV_NAME}')
-                    terraform.plan('${ENV_NAME}')
-                    terraform.apply('${ENV_NAME}')
+                    aws('staging')
+                    terraform.init('staging')
+                    terraform.plan('staging')
+                    terraform.apply('staging')
                 }
             }
         }
         stage('Deploy apps to staging') {
             environment {
-                ENV_NAME = 'staging'
-                username = 'ubuntu'
+                username = '$username'
             }
             steps {
                 script {
@@ -133,26 +129,23 @@ pipeline {
             }
         }
         stage('Create prod ec2') {
-            environment {
-                ENV_NAME = 'prod'
-            }
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
                     aws('prod')
-                    terraform.init('${ENV_NAME}')
-                    terraform.plan('${ENV_NAME}')
-                    terraform.apply('${ENV_NAME}')
+                    terraform.init('prod')
+                    terraform.plan('prod')
+                    terraform.apply('prod')
                 }
             }
         }
         stage('Deploy apps to prod') {
             environment {
-                ENV_NAME = 'prod'
+                username = '$username'
             }
             steps {
                 script {
-                    deploy('${ENV_NAME}')
+                    deploy('prod')
                 }
             }
         }
