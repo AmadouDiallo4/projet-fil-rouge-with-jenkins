@@ -120,7 +120,7 @@ pipeline {
         }
         stage('Deploy apps to staging') {
             environment {
-                username = '$username'
+                username = 'username'
             }
             steps {
                 script {
@@ -141,7 +141,7 @@ pipeline {
         }
         stage('Deploy apps to prod') {
             environment {
-                username = '$username'
+                username = 'username'
             }
             steps {
                 script {
