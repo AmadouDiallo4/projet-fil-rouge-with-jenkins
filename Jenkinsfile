@@ -139,7 +139,7 @@ pipeline {
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('${ENV_NAME}')
+                    aws('prod')
                     terraform.init('${ENV_NAME}')
                     terraform.plan('${ENV_NAME}')
                     terraform.apply('${ENV_NAME}')

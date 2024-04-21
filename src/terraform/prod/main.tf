@@ -10,7 +10,6 @@ module "ec2" {
   aws_sg_tag     = var.aws_prod_sg_tag
   aws_eip_tag    = var.aws_prod_eip_tag
   deploy_environment = var.deploy_environment
-  
 }
 
 # Generate inventory file
