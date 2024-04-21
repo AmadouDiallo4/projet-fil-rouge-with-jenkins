@@ -155,12 +155,12 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                script {
-                    /* Use Slack-notification.groovy from shared library */
-                    slackNotifier currentBuild.result
-                }
+    }
+    post {
+        always {
+            script {
+                /* Use Slack-notification.groovy from shared library */
+                slackNotifier currentBuild.result
             }
         }
     }
