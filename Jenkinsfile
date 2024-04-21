@@ -138,10 +138,11 @@ pipeline {
             }
             steps {
                 script {
-                    aws('$ENV_NAME')
-                    terraform.init('$ENV_NAME')
-                    terraform.plan('$ENV_NAME')
-                    terraform.apply('$ENV_NAME')
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    aws('${ENV_NAME}')
+                    terraform.init('${ENV_NAME}')
+                    terraform.plan('${ENV_NAME}')
+                    terraform.apply('${ENV_NAME}')
                 }
             }
         }
@@ -151,7 +152,7 @@ pipeline {
             }
             steps {
                 script {
-                    deploy('$ENV_NAME')
+                    deploy('${ENV_NAME}')
                 }
             }
         }
