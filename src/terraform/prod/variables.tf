@@ -19,7 +19,7 @@ variable "aws_prod_common_tag" {
   type        = map(any)
   description = "definir le tag de l'image"
   default = {
-    Name = "jenkins-prod-tag"
+    Name = "jenkins-prod"
   }
 }
 
@@ -29,7 +29,7 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "aws_prod_key_name" {
+variable "aws_key_name" {
   type    = string
   default = "devops-gbane"
 }
@@ -54,6 +54,12 @@ variable "aws_prod_sg_tag" {
   default = {
     Name = "jenkins-prod-sg"
   }
+}
+
+variable "aws_public_ip" {
+  type = string
+  description = "set public ip"
+  default = "eip"
 }
 
 variable "aws_prod_eip_tag" {
