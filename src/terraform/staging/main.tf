@@ -22,6 +22,7 @@ module "ec2" {
 # ansible_user: ${var.aws_staging_username}
 # EOF
 # }
+#
 
 # # Generate ic-webapp- deployment file
 # resource "local_file" "deployment_template" {
