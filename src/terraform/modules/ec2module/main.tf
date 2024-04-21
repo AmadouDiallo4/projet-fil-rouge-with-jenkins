@@ -58,6 +58,7 @@ resource "aws_eip" "lb" {
     #  echo ${aws_eip.lb.public_ip} >> files/infos_ec2.txt
     #  echo "ansible_host: $(awk '{print $1}' files/infos_ec2.txt)" > ../../ansible/host_vars/jenkins.yml
     #EOT
+    #
   }
 }
 
