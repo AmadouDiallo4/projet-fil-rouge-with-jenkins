@@ -100,35 +100,33 @@ pipeline {
                 }
             }
         }
-        // stage('Create prod EC2') {
-        //     steps {
-        //         script {
-        //             /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             aws('prod')
-        //             terraform.init('prod')
-        //             terraform.plan('prod')
-        //             terraform.apply('prod')
-        //         }
-        //     }
-        // }
-        // stage('Install K8s on prod') {
-        //     steps {
-        //         script {
-        //             /* groovylint-disable-next-line GStringExpressionWithinString */
-        //             aws('staging')
-        //         }
-        //     }
-        // }
-        // stage('Deploy apps on prod ') {
-        //     environment {
-        //         username = 'ubuntu'
-        //     }
-        //     steps {
-        //         script {
-        //             deploy('prod')
-        //         }
-        //     }
-        // }
+        stage('Create prod EC2') {
+            steps {
+                script {
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    aws('prod')
+                    terraform.init('prod')
+                    terraform.plan('prod')
+                    terraform.apply('prod')
+                }
+            }
+        }
+        stage('Install K8s on prod') {
+            steps {
+                script {
+                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    aws('prod')
+                    ansible.install_kubernetes('prod')
+                }
+            }
+        }
+        stage('Deploy apps on prod ') {
+            steps {
+                script {
+                    ansible.deploy_apps('prod')
+                }
+            }
+        }
     }
     post {
         always {
