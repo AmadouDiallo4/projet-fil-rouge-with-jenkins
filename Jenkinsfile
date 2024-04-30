@@ -93,16 +93,13 @@ pipeline {
                 }
             }
         }
-        // stage('Deploy apps on staging') {
-        //     environment {
-        //         username = 'ubuntu'
-        //     }
-        //     steps {
-        //         script {
-        //             deploy('staging')
-        //         }
-        //     }
-        // }
+        stage('Deploy apps on staging') {
+            steps {
+                script {
+                    ansible.deploy_apps('staging')
+                }
+            }
+        }
         // stage('Create prod EC2') {
         //     steps {
         //         script {

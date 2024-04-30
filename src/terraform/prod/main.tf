@@ -19,7 +19,7 @@ resource "local_file" "staging_inventory" {
 ---
 ansible_host: ${module.ec2.ec2_eip}
 ansible_user: ${var.aws_prod_username}
-ansible_ssh_private_key_file: ../files/${var.aws_key_name}.pem
+ansible_ssh_private_key_file: ../terraform/files/${var.aws_key_name}.pem
 EOF
 }
 
