@@ -87,7 +87,7 @@ pipeline {
         stage('Install k8s on staging') {
             steps {
                 script {
-                    /* groovylint-disable-next-line GStringExpressionWithinString */
+                    /* groovylint-disable-next-line GStringExpressionWithinString * */
                     aws('staging')
                     ansible.install_kubernetes('staging')
                 }
