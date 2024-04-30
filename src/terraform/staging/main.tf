@@ -14,21 +14,21 @@ module "ec2" {
 }
 
 # Generate inventory file
-# resource "local_file" "staging_inventory" {
-#   filename = "staging.yml"
-#   content = <<EOF
-# ---
-# ansible_host: ${module.ec2.ec2_eip}
-# ansible_user: ${var.aws_staging_username}
-# EOF
-# }
-#
+resource "local_file" "staging_inventory" {
+  filename = "staging.yml"
+  content = <<EOF
+---
+ansible_host: ${module.ec2.ec2_eip}
+ansible_user: ${var.aws_staging_username}
+EOF
+}
 
-# # Generate ic-webapp- deployment file
-# resource "local_file" "deployment_template" {
-#   content = templatefile("deployment_template.yml", {
-#     INSTANCE = "${module.ec2.ec2_eip}"
-#     }
-#   )
-#   filename = "ic-webapp-deployment.yml"
-# }
+
+# Generate ic-webapp- deployment file
+resource "local_file" "deployment_template" {
+  content = templatefile("deployment_template.yml", {
+    INSTANCE = "${module.ec2.ec2_eip}"
+    }
+  )
+  filename = "ic-webapp-deployment.yml"
+}
