@@ -73,41 +73,7 @@ pipeline {
                 }
             }
         }
-        // Ce stage permet de generer le fichier .env necéssaire à docker-compose.yml
-        stage('Generate env-file') {
-            environment {
-                ODOO_USER = credentials('ODOO_USER')
-                ODOO_DB = credentials('ODOO_DB')
-                ODOO_PASSWORD = credentials('ODOO_PASSWORD')
-                POSTGRES_DB = credentials('POSTGRES_DB')
-                POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-                POSTGRES_USER = credentials('POSTGRES_USER')
-                PGDATA = credentials('PGDATA')
-                PGADMIN_DEFAULT_EMAIL = credentials('PGADMIN_DEFAULT_EMAIL')
-                PGADMIN_DEFAULT_PASSWORD = credentials('PGADMIN_DEFAULT_PASSWORD')
-                PGADMIN_LISTEN_PORT = credentials('PGADMIN_LISTEN_PORT')
-            }
-            steps {
-                script {
-                    sh '''
-                        echo "Generating env-file"
-                        touch ./src/.env
-                        echo USER=$ODOO_USER >> ./src/.env
-                        echo ODOO_DB=$ODOO_DB >> ./src/.env
-                        echo PASSWORD=$ODOO_PASSWORD >> ./src/.env
-                        echo POSTGRES_DB=$POSTGRES_DB >> ./src/.env
-                        echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> ./src/.env
-                        echo POSTGRES_USER=$POSTGRES_USER >> ./src/.env
-                        echo PGDATA=$PGDATA >> ./src/.env
-                        echo PGADMIN_DEFAULT_EMAIL=$PGADMIN_DEFAULT_EMAIL >> ./src/.env
-                        echo PGADMIN_DEFAULT_PASSWORD=$PGADMIN_DEFAULT_PASSWORD >> ./src/.env
-                        echo PGADMIN_LISTEN_PORT=$PGADMIN_LISTEN_PORT >> ./src/.env
-                        echo $WORKSPACE
-                    '''
-                }
-            }
-        }
-        stage('Create staging ec2') {
+        stage('Create staging EC2') {
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
@@ -118,37 +84,54 @@ pipeline {
                 }
             }
         }
-        stage('Deploy apps to staging') {
-            environment {
-                username = 'ubuntu'
-            }
-            steps {
-                script {
-                    deploy('staging')
-                }
-            }
-        }
-        stage('Create prod ec2') {
+        stage('Install k8s on staging') {
             steps {
                 script {
                     /* groovylint-disable-next-line GStringExpressionWithinString */
-                    aws('prod')
-                    terraform.init('prod')
-                    terraform.plan('prod')
-                    terraform.apply('prod')
+                    aws('staging')
+                    ansible.install_kubernetes('staging')
                 }
             }
         }
-        stage('Deploy apps to prod') {
-            environment {
-                username = 'ubuntu'
-            }
-            steps {
-                script {
-                    deploy('prod')
-                }
-            }
-        }
+        // stage('Deploy apps on staging') {
+        //     environment {
+        //         username = 'ubuntu'
+        //     }
+        //     steps {
+        //         script {
+        //             deploy('staging')
+        //         }
+        //     }
+        // }
+        // stage('Create prod EC2') {
+        //     steps {
+        //         script {
+        //             /* groovylint-disable-next-line GStringExpressionWithinString */
+        //             aws('prod')
+        //             terraform.init('prod')
+        //             terraform.plan('prod')
+        //             terraform.apply('prod')
+        //         }
+        //     }
+        // }
+        // stage('Install K8s on prod') {
+        //     steps {
+        //         script {
+        //             /* groovylint-disable-next-line GStringExpressionWithinString */
+        //             aws('staging')
+        //         }
+        //     }
+        // }
+        // stage('Deploy apps on prod ') {
+        //     environment {
+        //         username = 'ubuntu'
+        //     }
+        //     steps {
+        //         script {
+        //             deploy('prod')
+        //         }
+        //     }
+        // }
     }
     post {
         always {
