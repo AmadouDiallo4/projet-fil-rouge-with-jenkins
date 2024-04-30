@@ -76,7 +76,7 @@ pipeline {
         stage('Create staging EC2') {
             steps {
                 script {
-                    /* groovylint-disable-next-line GStringExpressionWithinString * */
+                    /* groovylint-disable-next-line GStringExpressionWithinString ** */
                     aws('staging')
                     terraform.init('staging')
                     terraform.plan('staging')
