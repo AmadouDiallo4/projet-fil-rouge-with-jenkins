@@ -68,8 +68,8 @@ resource "aws_security_group" "allow_http_https_ssh" {
 
   ingress {
     description      = "Webapp Access"
-    from_port        = 8080
-    to_port          = 8080
+    from_port        = 30080
+    to_port          = 30080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -77,8 +77,8 @@ resource "aws_security_group" "allow_http_https_ssh" {
 
   ingress {
     description      = "Pgadmin Access"
-    from_port        = 8200
-    to_port          = 8200
+    from_port        = 30200
+    to_port          = 30200
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -86,8 +86,8 @@ resource "aws_security_group" "allow_http_https_ssh" {
 
   ingress {
     description      = "Odoo Access"
-    from_port        = 8069
-    to_port          = 8069
+    from_port        = 30069
+    to_port          = 30069
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]

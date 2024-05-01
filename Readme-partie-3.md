@@ -45,7 +45,7 @@ La ressource en `G` est un service de type `NodePort` qui va exposer la ressourc
 
 La ressource en `H` est un `Deployment` avec un replicas de 01 `Pod` , il permet le déploiement de l'application `Pgadmin`
 
->NB: Les ports à ouvrir dans la sécurity group `sg` seront modifiés pour être adapter aux des services de type `NodePort`:
+>NB: Les ports à ouvrir dans la sécurity group `sg` seront modifiés pour être adapter aux services de type `NodePort`:
 - `8080` -> `30080` : `ic-webapp`
 - `8081` -> `30200` : `pgadmin`
 - `8069` -> `30069` : `odoo`
