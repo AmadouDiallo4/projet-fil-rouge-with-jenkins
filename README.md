@@ -2344,24 +2344,27 @@ db8dea596f85   odoo:13.0         "/entrypoint.sh odoo…"   8 days ago   Up 11 s
 
 - **url de odoo**
 ![](images/webapp/staging/ic-webapp-1.png)
+----
 
 - **url de pgadmin**
 ![](images/webapp/staging/ic-webapp-2.png)
+---
 
 - **odoo**
 ![](images/webapp/staging/odoo.png)
-
+---
 ![](images/webapp/staging/odoo2.png)
+---
 
 - **pgadmin**
 ![](images/webapp/staging/pgadmin1_1.png)
-
+---
 ![](images/webapp/staging/pgadmin2.png)
-
+---
 ![](images/webapp/staging/pgadmin3.png)
-
+---
 ![](images/webapp/staging/pgadmin4.png)
-
+---
 ![](images/webapp/staging/pgadmin5.png)
 ---
 
@@ -2384,26 +2387,29 @@ c4edb080177d   postgres:12       "docker-entrypoint.s…"   8 days ago   Up 20 s
 ```
 - **webapp**
 ![](images/webapp/prod/ic-webapp-prod.png)
-
+---
 - **url de odoo**
 ![](images/webapp/prod/ic-webapp-prod2.png)
-
+---
 - **url de pgadmin**
 ![](images/webapp/prod/ic-webapp-prod3.png)
-
+---
 - **odoo**
 ![](images/webapp/prod/odoo-prod.png)
-
+---
 ![](images/webapp/prod/odoo-prod2.png)
-
+---
 - **pgadmin**
 ![](images/webapp/prod/pgadmin-prod2.png)
-
+---
 ![](images/webapp/prod/pgadmin-prod3.png)
-
+---
 ![](images/webapp/prod/pgadmin-prod4.png)
-
+---
 ![](images/webapp/prod/pgadmin-prod5.png)
+---
 
+# Conclusion
 
-
+La mise en œuvre de ce projet fil rouge a été très  bénéfique pour moi car il m'a permis de mettre en évidence les connaissances théoriques et pratiques acquises durant ce BootCamp DEVOPS.
+Il m'a surtout permis de monter entièrement une chaîne complète CI/CD intégrant cinq des six modules étudiés (Docker, Jenkins, Terraform, Ansible et Kubernetes) durant ce parcour
