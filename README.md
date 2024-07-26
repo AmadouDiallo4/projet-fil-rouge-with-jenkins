@@ -1,6 +1,6 @@
 # PROJET FINAL DEVOPS
 
-![](images/baniere.PNG)
+![](images/projet-fil-rouge-jenkins-k8s.png)
 
 **Le Projet fil rouge** est mon deuxième projet de fin de formation Devops. Son objectif est de faire la démonstration pratique et théorique des éléments techniques appris durant le cursus DevOps à savoir **Docker, gitlab-ci, jenkins, Terraform, Ansible et Kubernetes**
 
